@@ -7,7 +7,8 @@ import cookioParser from "cookie-parser";
 
 dotenv.config();
 
-import { authRouter } from "./routes/auth";
+import { authRoutes } from "./routes/auth";
+import { postRoutes } from "./routes/posts";
 import { trim } from "./middlewares/trim";
 
 const app = express();
@@ -16,7 +17,8 @@ app.use(morgan("dev"));
 app.use(trim);
 app.use(cookioParser());
 app.get("/", (_, response) => response.send("Hello World"));
-app.use("/api/auth", authRouter);
+app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {

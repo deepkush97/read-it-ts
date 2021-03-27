@@ -90,8 +90,8 @@ const logout = async (_: Request, res: Response) => {
   }
 };
 
-export const authRouter = Router();
-authRouter.post("/register", register);
-authRouter.post("/login", login);
-authRouter.get("/me", auth, me);
-authRouter.get("/logout", auth, logout);
+export const authRoutes = Router();
+authRoutes.post("/register", register);
+authRoutes.post("/login", login);
+authRoutes.get("/me", auth, me);
+authRoutes.get("/logout", auth, logout);
