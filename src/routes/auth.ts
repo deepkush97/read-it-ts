@@ -1,11 +1,11 @@
 import { compare } from "bcrypt";
 import { isEmpty, validate } from "class-validator";
-import { Request, Response, Router } from "express";
-import { sign, verify } from "jsonwebtoken";
 import cookie from "cookie";
-
+import { Request, Response, Router } from "express";
+import { sign } from "jsonwebtoken";
 import { User } from "../entities/User";
 import { auth } from "../middlewares/auth";
+
 const register = async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
   try {
@@ -49,7 +49,7 @@ const login = async (req: Request, res: Response) => {
     if (!passwordMatches)
       return res.status(401).json({ password: "Password is incorrect" });
 
-    const token = sign({ username }, process.env.JWT_SECRET);
+    const token = sign({ username }, process.env.JWT_SECRET!);
     res.set(
       "Set-Cookie",
       cookie.serialize("token", token, {
@@ -83,7 +83,7 @@ const logout = async (_: Request, res: Response) => {
         path: "/",
       })
     );
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
     return res.status(401).json({ error: error.message });
