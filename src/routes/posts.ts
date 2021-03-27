@@ -1,12 +1,8 @@
-import { compare } from "bcrypt";
-import { isEmpty, validate } from "class-validator";
 import { Request, Response, Router } from "express";
-import { sign, verify } from "jsonwebtoken";
-import cookie from "cookie";
-
-import { User } from "../entities/User";
-import { auth } from "../middlewares/auth";
 import { Post } from "../entities/Post";
+import { Sub } from "../entities/Sub";
+import { auth } from "../middlewares/auth";
+
 const createPost = async (req: Request, res: Response) => {
   const { title, body, sub } = req.body;
   const user = res.locals.user;
@@ -14,7 +10,8 @@ const createPost = async (req: Request, res: Response) => {
     return res.status(400).json({ title: "Title must not be empty." });
   }
   try {
-    const post = new Post({ title, body, user, subName: sub });
+    const subRecord = await Sub.findOneOrFail({ name: sub });
+    const post = new Post({ title, body, user, sub: subRecord });
     await post.save();
 
     return res.json(post);

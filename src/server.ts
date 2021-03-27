@@ -1,15 +1,15 @@
-import "reflect-metadata";
-import { createConnection } from "typeorm";
+import cookioParser from "cookie-parser";
+import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
-import dotenv from "dotenv";
-import cookioParser from "cookie-parser";
-
-dotenv.config();
-
+import "reflect-metadata";
+import { createConnection } from "typeorm";
+import { trim } from "./middlewares/trim";
 import { authRoutes } from "./routes/auth";
 import { postRoutes } from "./routes/posts";
-import { trim } from "./middlewares/trim";
+import { subRoutes } from "./routes/subs";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -19,6 +19,7 @@ app.use(cookioParser());
 app.get("/", (_, response) => response.send("Hello World"));
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/subs", subRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {
