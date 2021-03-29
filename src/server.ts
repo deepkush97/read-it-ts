@@ -1,4 +1,4 @@
-import cookioParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
@@ -15,8 +15,14 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(trim);
-app.use(cookioParser());
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.ORIGIN,
+    optionsSuccessStatus: 200,
+  })
+);
 app.get("/", (_, response) => response.send("Hello World"));
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
