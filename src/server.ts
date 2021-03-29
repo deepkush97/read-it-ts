@@ -8,7 +8,7 @@ import { trim } from "./middlewares/trim";
 import { authRoutes } from "./routes/auth";
 import { postRoutes } from "./routes/posts";
 import { subRoutes } from "./routes/subs";
-
+import cors from "cors";
 dotenv.config();
 
 const app = express();
@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(trim);
 app.use(cookioParser());
+app.use(cors());
 app.get("/", (_, response) => response.send("Hello World"));
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
