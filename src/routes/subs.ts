@@ -4,6 +4,7 @@ import { getRepository } from "typeorm";
 import { Sub } from "../entities/Sub";
 import { User } from "../entities/User";
 import { auth } from "../middlewares/auth";
+import { user } from "../middlewares/user";
 
 const createSub = async (req: Request, res: Response) => {
   const { name, title, description } = req.body;
@@ -37,4 +38,4 @@ const createSub = async (req: Request, res: Response) => {
 };
 
 export const subRoutes = Router();
-subRoutes.post("/", auth, createSub);
+subRoutes.post("/", user, auth, createSub);

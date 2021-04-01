@@ -5,6 +5,7 @@ import { Request, Response, Router } from "express";
 import { sign } from "jsonwebtoken";
 import { User } from "../entities/User";
 import { auth } from "../middlewares/auth";
+import { user } from "../middlewares/user";
 
 const mapErrors = (errors: Object[]) => {
   return errors.reduce((prev: any, error: any) => {
@@ -102,5 +103,5 @@ const logout = async (_: Request, res: Response) => {
 export const authRoutes = Router();
 authRoutes.post("/register", register);
 authRoutes.post("/login", login);
-authRoutes.get("/me", auth, me);
-authRoutes.get("/logout", auth, logout);
+authRoutes.get("/me", user, auth, me);
+authRoutes.get("/logout", user, auth, logout);
