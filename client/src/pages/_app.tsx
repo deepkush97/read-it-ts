@@ -1,4 +1,5 @@
 import "../styles/tailwind.css";
+import "../styles/icons.css";
 import { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import axios from "axios";
