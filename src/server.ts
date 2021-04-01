@@ -8,6 +8,7 @@ import { trim } from "./middlewares/trim";
 import { authRoutes } from "./routes/auth";
 import { postRoutes } from "./routes/posts";
 import { subRoutes } from "./routes/subs";
+import { miscRoutes } from "./routes/misc";
 import cors from "cors";
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.get("/", (_, response) => response.send("Hello World"));
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/subs", subRoutes);
+app.use("/api/misc", miscRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {

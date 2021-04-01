@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { Entity } from "./Entity";
 import { Post } from "./Post";
+import { Vote } from "./Vote";
 
 @TOEntity("users")
 export class User extends Entity {
@@ -35,6 +36,9 @@ export class User extends Entity {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @OneToMany(() => Vote, (vote) => vote.user)
+  votes: Vote[];
 
   @BeforeInsert()
   async hashPassword() {
