@@ -29,13 +29,15 @@
     "morgan": "^1.10.0",
     "pg": "^8.4.0",
     "reflect-metadata": "^0.1.10",
-    "typeorm": "^0.2.31"
+    "typeorm": "^0.2.31",
+    "typeorm-seeding": "^1.6.1"
   },
   "scripts": {
     "start": "ts-node src/server.ts",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js",
     "server": "nodemon src/server.ts",
     "client": "cd client && npm run dev",
-    "dev": "concurrently --kill-others \"npm run server\" \"npm run client\" --names server,client"
+    "dev": "concurrently --kill-others \"npm run server\" \"npm run client\" --names server,client",
+    "seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
   }
 }
