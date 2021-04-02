@@ -4,13 +4,15 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import InputGroup from "../components/InputGroup";
-import { useAuthDispatch } from "../context/auth";
+import { useAuthDispatch, useAuthState } from "../context/auth";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
   const router = useRouter();
   const dispatch = useAuthDispatch();
+  const { authenticated } = useAuthState();
+  if (authenticated) router.push("/");
   const submitForm = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -18,7 +20,7 @@ export default function Login() {
         password,
         username,
       });
-      dispatch({ type: "LOGIN", payload: res.data });
+      dispatch("LOGIN", res.data);
       router.push("/");
     } catch (error) {
       setErrors(error.response.data);
