@@ -13,3 +13,10 @@ export interface Post {
   userVote?: number;
   commentCount?: number;
 }
+
+export interface User {
+  username: string;
+  email: string;
+  createAt: string;
+  updatedAt: string;
+}

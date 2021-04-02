@@ -1,10 +1,10 @@
-import "../styles/tailwind.css";
-import "../styles/icons.css";
+import axios from "axios";
 import { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import axios from "axios";
-import { Fragment } from "react";
 import NavBar from "../components/NavBar";
+import { AuthProvider } from "../context/auth";
+import "../styles/icons.css";
+import "../styles/tailwind.css";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.withCredentials = true;
@@ -13,10 +13,10 @@ function App({ Component, pageProps }: AppProps) {
   const authRoutes = ["/login", "/register"];
   const isAuthRoute = authRoutes.includes(pathname);
   return (
-    <Fragment>
+    <AuthProvider>
       {!isAuthRoute && <NavBar />}
       <Component {...pageProps} />
-    </Fragment>
+    </AuthProvider>
   );
 }
 
