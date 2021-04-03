@@ -7,6 +7,15 @@ import { AuthProvider } from "../context/auth";
 import "../styles/icons.css";
 import "../styles/tailwind.css";
 
+const fetcher = async (url: string) => {
+  try {
+    const res = await axios.get(url);
+    return res.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
 axios.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.withCredentials = true;
 function App({ Component, pageProps }: AppProps) {
@@ -16,13 +25,14 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <SWRConfig
       value={{
-        fetcher: (url) => axios.get(url).then((res) => res.data),
-        dedupingInterval: 10000,
+        fetcher,
       }}
     >
       <AuthProvider>
         {!isAuthRoute && <NavBar />}
-        <Component {...pageProps} />
+        <div className={isAuthRoute ? "" : "pt-12"}>
+          <Component {...pageProps} />
+        </div>
       </AuthProvider>
     </SWRConfig>
   );

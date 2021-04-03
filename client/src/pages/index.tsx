@@ -1,16 +1,14 @@
-import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { Fragment } from "react";
 import useSWR from "swr";
 import PostCard from "../components/PostCard";
-import { Post } from "../types";
 dayjs.extend(relativeTime);
 export default function Home() {
   const { data: posts } = useSWR("/posts");
   return (
-    <div className="pt-12 ">
+    <Fragment>
       <Head>
         <title>Read-It | Front page of the internet</title>
       </Head>
@@ -23,7 +21,7 @@ export default function Home() {
         </div>
         {/* Sidebar */}
       </div>
-    </div>
+    </Fragment>
   );
 }
 
