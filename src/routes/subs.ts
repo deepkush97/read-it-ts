@@ -1,12 +1,16 @@
 import { isEmpty } from "class-validator";
 import { Request, Response, Router } from "express";
 import { getRepository } from "typeorm";
+import path from "path";
+import fs from "fs";
 import { Post } from "../entities/Post";
 import { Sub } from "../entities/Sub";
 import { User } from "../entities/User";
 import { auth } from "../middlewares/auth";
 import { user } from "../middlewares/user";
-
+import multer, { FileFilterCallback } from "multer";
+import { makeId } from "../utils/helpers";
+import { ownSub } from "../middlewares/ownSub";
 const createSub = async (req: Request, res: Response) => {
   const { name, title, description } = req.body;
   const user: User = res.locals.user;
@@ -57,6 +61,57 @@ const getSub = async (req: Request, res: Response) => {
   }
 };
 
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: "public/images",
+    filename: (_, file, callback) => {
+      const name = makeId(15);
+      callback(null, name + path.extname(file.originalname));
+    },
+  }),
+  fileFilter: (_, file: any, callback: FileFilterCallback) => {
+    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+      callback(null, true);
+    } else {
+      callback(new Error("Not an image"));
+    }
+  },
+});
+
+const uploadSubImage = async (req: Request, res: Response) => {
+  const sub: Sub = res.locals.sub;
+  try {
+    const type = req.body.type;
+    if (type !== "image" && type !== "banner") {
+      fs.unlinkSync(req.file.path);
+      return res.status(400).json({ error: "Invalid Type" });
+    }
+    let oldImageUrn: string = "";
+    if (type === "image") {
+      oldImageUrn = sub.imageUrn || "";
+      sub.imageUrn = req.file.filename;
+    } else {
+      oldImageUrn = sub.bannerUrn || "";
+      sub.bannerUrn = req.file.filename;
+    }
+    await sub.save();
+    if (oldImageUrn !== "") {
+      fs.unlinkSync(`public/images/${oldImageUrn}`);
+    }
+    return res.json(sub);
+  } catch (error) {
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
 export const subRoutes = Router();
 subRoutes.post("/", user, auth, createSub);
 subRoutes.get("/:name", user, getSub);
+subRoutes.post(
+  "/:name/image",
+  user,
+  auth,
+  ownSub,
+  upload.single("file"),
+  uploadSubImage
+);
