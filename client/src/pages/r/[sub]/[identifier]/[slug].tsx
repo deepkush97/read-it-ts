@@ -178,7 +178,7 @@ export default function PostPage() {
                           onChange={(e) => setNewComment(e.target.value)}
                           value={newComment}
                         ></textarea>
-                        <div className="flex-justify-end">
+                        <div className="flex justify-end">
                           <button
                             className="px-3 py-1 blue button"
                             disabled={newComment.trim() === ""}

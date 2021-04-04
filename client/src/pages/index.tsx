@@ -39,17 +39,18 @@ export default function Home() {
                     className="flex items-center px-4 py-2 text-xs border-b"
                   >
                     <Link href={`/r/${sub.name}`}>
-                      <div className="w-6 h-6 mr-2 overflow-hidden rounded-full cursor-pointer">
+                      <a>
                         <Image
+                          className="rounded-full cursor-pointer "
                           src={sub.imageUrl}
                           alt="Top Sub"
                           width={(6 * 16) / 4}
                           height={(6 * 16) / 4}
                         />
-                      </div>
+                      </a>
                     </Link>
                     <Link href={`/r/${sub.name}`}>
-                      <a className="font-bold hover:cursor-pointer">
+                      <a className="ml-2 font-bold hover:cursor-pointer">
                         /r/{sub.name}
                       </a>
                     </Link>
