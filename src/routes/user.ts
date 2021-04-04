@@ -13,12 +13,12 @@ const getUserSubmissions = async (req: Request, res: Response) => {
 
     const posts = await Post.find({
       where: { user },
-      relations: ["users", "votes", "sub"],
+      relations: ["user", "votes", "sub"],
     });
 
     const comments = await Comment.find({
       where: { user },
-      relations: ["posts"],
+      relations: ["post"],
     });
 
     if (res.locals.user) {
