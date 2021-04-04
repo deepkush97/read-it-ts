@@ -1,4 +1,4 @@
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import {
   BeforeInsert,
   Column,
@@ -46,6 +46,14 @@ export class Comment extends Entity {
   setUserVote(user: User) {
     const index = this.votes?.findIndex((v) => v.username === user.username);
     this.userVote = index > -1 ? this.votes[index].value : 0;
+  }
+
+  @Expose()
+  get voteScore(): number {
+    return this.votes?.reduce(
+      (prev, current) => prev + (current.value || 0),
+      0
+    );
   }
 
   @BeforeInsert()

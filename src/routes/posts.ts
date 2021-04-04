@@ -44,8 +44,11 @@ const getPost = async (req: Request, res: Response) => {
   try {
     const post = await Post.findOneOrFail(
       { identifier, slug },
-      { relations: ["sub"] }
+      { relations: ["sub", "votes", "comments"] }
     );
+    if (res.locals.user) {
+      post.setUserVote(res.locals.user);
+    }
     return res.json(post);
   } catch (error) {
     console.error(error);
@@ -67,8 +70,28 @@ const commentOnPost = async (req: Request, res: Response) => {
   }
 };
 
+const getPostComments = async (req: Request, res: Response) => {
+  const { identifier, slug } = req.params;
+  try {
+    const post = await Post.findOneOrFail({ identifier, slug });
+    const comments = await Comment.find({
+      where: { post },
+      order: { createdAt: "DESC" },
+      relations: ["votes"],
+    });
+    if (res.locals.user) {
+      comments.forEach((c) => c.setUserVote(res.locals.user));
+    }
+    return res.json(comments);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
 export const postRoutes = Router();
 postRoutes.post("/", user, auth, createPost);
 postRoutes.get("/", user, getPosts);
-postRoutes.get("/:identifier/:slug", getPost);
+postRoutes.get("/:identifier/:slug", user, getPost);
 postRoutes.post("/:identifier/:slug/comments", user, auth, commentOnPost);
+postRoutes.get("/:identifier/:slug/comments", user, getPostComments);
