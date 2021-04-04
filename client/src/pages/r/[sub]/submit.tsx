@@ -32,7 +32,7 @@ export default function PostSubmitPage() {
       <Head>
         <title>Submit to read-it</title>
       </Head>
-      <div className="w-160">
+      <div className="w-full px-4 md:w-160 md:p-0">
         <div className="p-4 bg-white rounded">
           Submit a post to /r/{subName}
           <form onSubmit={submitPost}>
