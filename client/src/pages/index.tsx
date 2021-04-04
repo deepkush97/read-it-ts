@@ -13,7 +13,6 @@ export default function Home() {
   const { data: topSubs } = useSWR<Sub[]>("/misc/top-subs");
   const { authenticated } = useAuthState();
   const [observedPost, setObservedPost] = useState("");
-
   const {
     data,
     error,
@@ -47,11 +46,18 @@ export default function Home() {
     );
     observer.observe(element);
   };
-
+  const description =
+    "Reddit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!";
+  const title = "Read-It | Front page of the internet";
   return (
     <Fragment>
       <Head>
-        <title>Read-It | Front page of the internet</title>
+        <title>{title}</title>
+        <meta name="description" content={description}></meta>
+        <meta property="og:title" content={title}></meta>
+        <meta property="og:description" content={description}></meta>
+        <meta property="twitter:title" content={title}></meta>
+        <meta property="twitter:description" content={description}></meta>
       </Head>
       <div className="container flex pt-4">
         {/* Post feed */}

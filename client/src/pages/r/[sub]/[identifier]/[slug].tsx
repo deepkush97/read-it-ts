@@ -1,24 +1,25 @@
+import axios from "axios";
+import classNames from "classnames";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
 import useSWR from "swr";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-
-import classNames from "classnames";
-import SideBar from "../../../../components/SideBar";
 import ActionButton from "../../../../components/ActionButton";
-import { Post, Comment } from "../../../../types";
-import axios from "axios";
+import SideBar from "../../../../components/SideBar";
 import { useAuthState } from "../../../../context/auth";
-import { FormEvent, useState } from "react";
+import { Comment, Post } from "../../../../types";
+
 dayjs.extend(relativeTime);
 
 export default function PostPage() {
   const { authenticated, user } = useAuthState();
   const router = useRouter();
   const [newComment, setNewComment] = useState("");
+  const [description, setDescription] = useState("");
   const { identifier, slug, sub } = router.query;
   const { data: post, error } = useSWR<Post>(
     identifier && slug ? `/posts/${identifier}/${slug}` : null
@@ -28,6 +29,13 @@ export default function PostPage() {
     identifier && slug ? `/posts/${identifier}/${slug}/comments ` : null
   );
   if (error) router.push("/");
+
+  useEffect(() => {
+    if (!post) return;
+    let desc = post.body || post.title;
+    desc = desc.substring(0, 157).concat("...");
+    setDescription(desc);
+  }, [post]);
 
   const submitComment = async (event: FormEvent) => {
     event.preventDefault();
@@ -69,6 +77,11 @@ export default function PostPage() {
     <>
       <Head>
         <title>{post?.title}</title>
+        <meta name="description" content={description}></meta>
+        <meta property="og:title" content={post?.title}></meta>
+        <meta property="og:description" content={description}></meta>
+        <meta property="twitter:title" content={post?.title}></meta>
+        <meta property="twitter:description" content={description}></meta>
       </Head>
       <Link href={`/r/${sub}`}>
         <a>
