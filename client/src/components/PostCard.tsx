@@ -6,9 +6,12 @@ import React, { FC, Fragment } from "react";
 import { Post } from "../types";
 import ActionButton from "./ActionButton";
 import classNames from "classnames";
+import { useAuthState } from "../context/auth";
+import { useRouter } from "next/router";
 dayjs.extend(relativeTime);
 interface PostCardProps {
   post: Post;
+  revalidate?: () => Promise<boolean>;
 }
 
 const PostCard: FC<PostCardProps> = ({
@@ -26,21 +29,27 @@ const PostCard: FC<PostCardProps> = ({
     userVote,
     voteScore,
   },
+  revalidate,
 }) => {
+  const { authenticated } = useAuthState();
+  const router = useRouter();
   const vote = async (value: number) => {
+    if (!authenticated) router.push("/login");
+    if (value === userVote) value = 0;
     try {
       const res = await axios.post("/misc/vote", {
         identifier,
         slug,
         value,
       });
+      if (revalidate) revalidate();
       console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
   return (
-    <div className="flex mb-4 bg-white rounded ">
+    <div className="flex mb-4 bg-white rounded " id={identifier}>
       {/* Vote Section */}
       <div className="flex-shrink-0 w-10 py-3 text-center bg-gray-200 rounded-l">
         {/* Up vote */}
