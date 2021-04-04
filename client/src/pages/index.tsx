@@ -39,7 +39,7 @@ export default function Home() {
                     className="flex items-center px-4 py-2 text-xs border-b"
                   >
                     <Link href={`/r/${sub.name}`}>
-                      <div className="mr-2 overflow-hidden rounded-full cursor-pointer">
+                      <div className="w-6 h-6 mr-2 overflow-hidden rounded-full cursor-pointer">
                         <Image
                           src={sub.imageUrl}
                           alt="Top Sub"
